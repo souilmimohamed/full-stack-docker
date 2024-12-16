@@ -13,4 +13,8 @@
         <PackageReference Include="Swashbuckle.Core" Version="5.6.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Core.Weather\Core.Weather.csproj" />
+    </ItemGroup>
+
 </Project>

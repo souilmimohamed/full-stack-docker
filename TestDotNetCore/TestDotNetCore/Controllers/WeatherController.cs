@@ -1,3 +1,4 @@
+using Core.Weather.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -10,25 +11,20 @@ namespace TestDotNetCore.Controllers;
 [ApiController]
 public class WeatherController : ControllerBase
 {
+    private readonly IWeatherService _weatherService;
+
+    public WeatherController(IWeatherService weatherService)
+    {
+        _weatherService = weatherService;
+    }
     private const string MODULE = "Weather";
 
     [HttpGet]
     [SwaggerOperation(Tags = new[] { MODULE })]
-    [ProducesResponseType(typeof(WeatherForecast[]), 200)]
+    [ProducesResponseType(typeof(List<WeatherForecast>), 200)]
     public IActionResult GetWeatherForecast()
     {
-        var summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return Ok(forecast.ToArray());
+        var response = _weatherService.GetWeather();
+        return Ok(response);
     }
 }
